@@ -1,59 +1,73 @@
--- consultas do Volta
---Testes para ver as informações
+-- consultas do volta
 
 -- 1. incidentes por área e empresa
-select c.name as company,
+SELECT c.name AS company,
        a.sector_name,
-       count(i.id) as total_incidents
-from area a
-join company c on c.id = a.company_id
-left join incident i on i.area_id = a.id
-group by c.name, a.sector_name
-order by total_incidents desc, c.name;
+       COUNT(i.id) AS total_incidents
+FROM area a
+JOIN company c ON c.id = a.company_id
+LEFT JOIN incident i ON i.area_id = a.id
+GROUP BY c.name, a.sector_name
+ORDER BY total_incidents DESC, c.name;
 
 -- 2. ranking de cooperativas pela nota média (através das views)
-select name, average_rating, total_reviews
-from vw_cooperative_rating
-order by average_rating desc nulls last;
+SELECT name, average_rating, total_reviews
+FROM vw_cooperative_rating
+ORDER BY average_rating DESC;
 
 -- 3. percentual de reciclagem por mês (através das views)
-select * from vw_esg_by_period order by period;
+SELECT * FROM vw_esg_by_period ORDER BY period;
 
 -- 4. coletas com status atual, cooperativa e tipo de resíduo (através das views)
-select collection_id, cooperative, waste_type, current_status, scheduled_date
-from vw_collection_details
-order by collection_id;
+SELECT collection_id, cooperative, waste_type, current_status, scheduled_date
+FROM vw_collection_details
+ORDER BY collection_id;
 
 -- 5. cooperativas e suas especialidades (através das views)
-select name, specialties from vw_cooperative_specialties
-order by name;
+SELECT name, specialties FROM vw_cooperative_specialties
+ORDER BY name;
 
 -- 6. ocorrências com empresa, área e quem registrou (através das views)
-select * from vw_incident_details
-order by incident_id;
+SELECT * FROM vw_incident_details
+ORDER BY incident_id;
 
 -- 7. resumo por empresa (através das views)
-select * from vw_company_summary order by total_incidents desc;
+SELECT * FROM vw_company_summary ORDER BY total_incidents DESC;
 
 -- 8. usuários e a quem pertencem (através das views)
-select * from vw_user_owner order by user_id;
+SELECT * FROM vw_user_owner ORDER BY user_id;
 
 -- 9. mensagens do chat com o nome de quem enviou (através das views)
-select * from vw_chat_messages order by conversation_id, sent_at;
+SELECT * FROM vw_chat_messages ORDER BY conversation_id, sent_at;
 
 -- verificações (todas devem voltar zero linhas)
 
 -- 10. coletas sem nenhum histórico de status
-select col.id
-from collection col
-left join collection_status cs on cs.collection_id = col.id
-where cs.id is null;
+SELECT col.id
+FROM collection col
+LEFT JOIN collection_status cs ON cs.collection_id = col.id
+WHERE cs.id IS NULL;
 
 -- 11. avaliações de coletas que não foram concluídas
-select r.id as review_id, col.current_status
-from review r
-join collection col on col.id = r.collection_id
-where col.current_status <> 'CONCLUIDA';
+SELECT r.id AS review_id, col.current_status
+FROM review r
+JOIN collection col ON col.id = r.collection_id
+WHERE col.current_status <> 'CONCLUIDA';
 
 -- 12. current_status diferente do último status do histórico (através das views)
-select * from vw_collection_status_check; 
+SELECT * FROM vw_collection_status_check; 
+
+-- 13. chaves estrangeiras do banco
+SELECT tc.table_name AS tabela,
+       kcu.column_name AS coluna,
+       ccu.table_name AS referencia,
+       ccu.column_name AS coluna_referencia
+FROM information_schema.table_constraints tc
+JOIN information_schema.key_column_usage kcu
+    ON tc.constraint_name = kcu.constraint_name
+    AND tc.table_schema = kcu.table_schema
+JOIN information_schema.constraint_column_usage ccu
+    ON tc.constraint_name = ccu.constraint_name
+    AND tc.table_schema = ccu.table_schema
+WHERE tc.constraint_type = 'FOREIGN KEY'
+ORDER BY tc.table_name;
