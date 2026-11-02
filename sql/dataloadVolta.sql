@@ -6,7 +6,7 @@
 BEGIN;
  
 INSERT INTO role (id, type)
-OVERRIDING SYSTEM VALUE
+OVERRIDING SYSTEM 
 VALUES (1, 'ADMINISTRADOR'), (2, 'FUNCIONARIO'), (3, 'GERENTE');
  
 INSERT INTO company (id, name, cnpj, cep, address)
