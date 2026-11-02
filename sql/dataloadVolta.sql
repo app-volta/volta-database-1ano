@@ -10,7 +10,7 @@ OVERRIDING SYSTEM
 VALUES (1, 'ADMINISTRADOR'), (2, 'FUNCIONARIO'), (3, 'GERENTE');
  
 INSERT INTO company (id, name, cnpj, cep, address)
-OVERRIDING SYSTEM VALUE
+OVERRIDING system VALUE
 VALUES
     (1, 'Empresa Verde Alimentos LTDA', '12345678000195', '01001000', 'Rua das Indústrias, 1200, São Paulo - SP'),
     (2, 'Alimentos Sustentáveis Brasil LTDA', '98765432000110', '01002000', 'Avenida Paulista, 850, São Paulo - SP');
