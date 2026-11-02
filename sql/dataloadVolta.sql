@@ -3,14 +3,20 @@
 -- carga de dados de teste do volta (dados fictícios)
 -- só tem avaliação de coleta concluída e incidente resolvido tem coleta concluída
  
+-- Executar a carga completa em tabelas vazias, apos sql/tabelasVolta.sql.
+-- No DBeaver, executar como script e sem uma transacao anterior em aberto.
+-- A carga nao e idempotente: repetir causa conflito de chaves e aborta a transacao.
+-- Em caso de erro, executar ROLLBACK antes de tentar novamente; nao executar trechos isolados.
+-- SETVAL nao e revertido por ROLLBACK; executar sem gravacoes concorrentes.
+
 BEGIN;
  
 INSERT INTO role (id, type)
-OVERRIDING SYSTEM 
+OVERRIDING SYSTEM VALUE
 VALUES (1, 'ADMINISTRADOR'), (2, 'FUNCIONARIO'), (3, 'GERENTE');
  
 INSERT INTO company (id, name, cnpj, cep, address)
-OVERRIDING system VALUE
+OVERRIDING SYSTEM VALUE
 VALUES
     (1, 'Empresa Verde Alimentos LTDA', '12345678000195', '01001000', 'Rua das Indústrias, 1200, São Paulo - SP'),
     (2, 'Alimentos Sustentáveis Brasil LTDA', '98765432000110', '01002000', 'Avenida Paulista, 850, São Paulo - SP');
