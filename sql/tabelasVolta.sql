@@ -34,6 +34,8 @@ CREATE TABLE company (
     cnpj VARCHAR(14) NOT NULL UNIQUE,
     cep VARCHAR(8),
     address VARCHAR(255) NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
  
     CONSTRAINT chk_cooperative_cep CHECK (cep ~ '^[0-9]{8}$'),
     CONSTRAINT chk_company_cnpj CHECK (cnpj ~ '^[0-9]{14}$')
